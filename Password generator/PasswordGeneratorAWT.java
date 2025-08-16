@@ -16,6 +16,7 @@ public class PasswordGeneratorAWT extends Frame implements ActionListener, ItemL
     private final Button btnCopy     = new Button("Copy");
     private final TextField tfOutput = new TextField("", 30);
     private final Label status = new Label(" ");
+    private final Checkbox cbFullscreen = new Checkbox("Fullscreen", false); // ✅ added
 
     private final SecureRandom rng = new SecureRandom();
 
@@ -48,6 +49,9 @@ public class PasswordGeneratorAWT extends Frame implements ActionListener, ItemL
         status.setForeground(Color.DARK_GRAY);
         c.gridx = 0; c.gridy = 4; c.gridwidth = 2; add(status, c);
 
+        // Row 5: Fullscreen toggle
+        c.gridx = 0; c.gridy = 5; c.gridwidth = 2; add(cbFullscreen, c);
+
         // Listeners
         btnGenerate.addActionListener(this);
         btnCopy.addActionListener(this);
@@ -55,13 +59,14 @@ public class PasswordGeneratorAWT extends Frame implements ActionListener, ItemL
         cbUpper.addItemListener(this);
         cbDigits.addItemListener(this);
         cbSymbols.addItemListener(this);
+        cbFullscreen.addItemListener(this); // ✅ listens fullscreen toggle
 
         // Window close
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) { dispose(); System.exit(0); }
         });
 
-        setResizable(false);
+        setResizable(true);
         pack();
         setLocationRelativeTo(null);
         setVisible(true);
@@ -80,8 +85,24 @@ public class PasswordGeneratorAWT extends Frame implements ActionListener, ItemL
 
     @Override
     public void itemStateChanged(ItemEvent e) {
-        // Optional: regenerate automatically on option toggle
-        // generateAndShow();
+        Object src = e.getSource();
+        if (src == cbFullscreen) {
+            if (cbFullscreen.getState()) {
+                // Go fullscreen
+                dispose(); // required when changing undecorated
+                setUndecorated(true);
+                setExtendedState(Frame.MAXIMIZED_BOTH);
+                setVisible(true);
+            } else {
+                // Back to windowed
+                dispose();
+                setUndecorated(false);
+                setExtendedState(Frame.NORMAL);
+                setSize(600, 400);
+                setLocationRelativeTo(null);
+                setVisible(true);
+            }
+        }
     }
 
     private void generateAndShow() {
