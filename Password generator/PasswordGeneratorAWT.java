@@ -49,7 +49,6 @@ public class PasswordGeneratorAWT extends Frame implements ActionListener, ItemL
         status.setForeground(Color.DARK_GRAY);
         c.gridx = 0; c.gridy = 4; c.gridwidth = 2; add(status, c);
 
-        // Row 5: Fullscreen toggle
         c.gridx = 0; c.gridy = 5; c.gridwidth = 2; add(cbFullscreen, c);
 
         // Listeners
